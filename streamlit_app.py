@@ -26,7 +26,7 @@ if filtered_order.empty:
 order_info = filtered_order.iloc[0]
 
 # Colors to match the LG cart page theme
-WHITE = "#FFFFFF"
+WHITE = "rgb(255, 255, 255)"  # App background
 LIGHT_GRAY = "#F2F2F2"
 DARK_TEXT = "#1B1A1E"
 ACCENT_COLOR = "#A50034"
@@ -40,7 +40,7 @@ STATUS_COLOR = ACCENT_COLOR if order_info['status'] in ['Pending', 'Processing',
 st.markdown(f"""
     <style>
     body {{
-        background-color: {WHITE};
+        background-color: {WHITE};  /* Set background to white */
         color: {DARK_TEXT};
     }}
     .section-header {{
