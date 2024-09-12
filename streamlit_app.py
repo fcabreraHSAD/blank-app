@@ -25,78 +25,85 @@ if filtered_order.empty:
 # Extract order information
 order_info = filtered_order.iloc[0]
 
-# Colors to match the LG cart page theme
-WHITE = "rgb(255, 255, 255)"  # App background
-LIGHT_GRAY = "#F2F2F2"
-DARK_TEXT = "#1B1A1E"
-ACCENT_COLOR = "#A50034"
-BUTTON_COLOR = ACCENT_COLOR
-BUTTON_TEXT_COLOR = WHITE
+# Material UI Colors and Styling
+PRIMARY_COLOR = "#6200EE"
+SECONDARY_COLOR = "#03DAC6"
+BACKGROUND_COLOR = "#FFFFFF"  # App background to pure white
+TEXT_COLOR = "#000000"  # Default black text
+LIGHT_BACKGROUND = "#F5F5F5"
+ACCENT_COLOR = "#BB86FC"
+ERROR_COLOR = "#B00020"
 
 # Status color logic
-STATUS_COLOR = ACCENT_COLOR if order_info['status'] in ['Pending', 'Processing', 'Shipped'] else "#148F29"  # Green for delivered, red otherwise
+STATUS_COLOR = ERROR_COLOR if order_info['status'] in ['Pending', 'Processing', 'Shipped'] else SECONDARY_COLOR  # Green for delivered, red otherwise
 
-# Styling
+# Apply Material Design-inspired styling
 st.markdown(f"""
     <style>
     body {{
-        background-color: {WHITE};  /* Set background to white */
-        color: {DARK_TEXT};
+        background-color: {BACKGROUND_COLOR};  /* Set background to white */
+        color: {TEXT_COLOR};
     }}
     .section-header {{
         font-size: 24px;
-        font-weight: bold;
-        color: {DARK_TEXT};
-        margin-bottom: 10px;
+        font-weight: 600;
+        color: {TEXT_COLOR};
+        margin-bottom: 20px;
     }}
     .status-header {{
         font-size: 30px;
         font-weight: bold;
         color: {STATUS_COLOR};
-        margin-bottom: 10px;
-    }}
-    .info-box {{
-        background-color: {LIGHT_GRAY};
-        padding: 10px;
-        border-radius: 5px;
         margin-bottom: 20px;
     }}
+    .info-box {{
+        background-color: {LIGHT_BACKGROUND};
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 2px rgba(0, 0, 0, 0.24);
+    }}
     .info-box div {{
-        margin-bottom: 5px;
+        margin-bottom: 8px;
+        color: {TEXT_COLOR};
     }}
     .right-align {{
         text-align: right;
     }}
     .order-items-table th, .order-items-table td {{
-        padding: 10px;
+        padding: 12px;
         border: 1px solid #ddd;
     }}
     .order-items-table th {{
-        background-color: {LIGHT_GRAY};
+        background-color: {LIGHT_BACKGROUND};
         font-weight: bold;
     }}
     .totals-box {{
         margin-top: 20px;
         border-top: 1px solid #ddd;
-        padding-top: 10px;
+        padding-top: 15px;
         text-align: right;
+        color: {TEXT_COLOR};
     }}
     .totals-box strong {{
-        color: {ACCENT_COLOR};
+        color: {PRIMARY_COLOR};
     }}
     .button {{
-        background-color: {BUTTON_COLOR};
-        color: {BUTTON_TEXT_COLOR};
+        background-color: {PRIMARY_COLOR};
+        color: {BACKGROUND_COLOR};
         padding: 10px;
         border-radius: 5px;
         cursor: pointer;
+        text-align: center;
+        margin-top: 20px;
+        display: inline-block;
     }}
     .good-status {{
-        color: #148F29;
+        color: {SECONDARY_COLOR};
         font-weight: bold;
     }}
     .processing-status {{
-        color: {ACCENT_COLOR};
+        color: {ERROR_COLOR};
         font-weight: bold;
     }}
     </style>
