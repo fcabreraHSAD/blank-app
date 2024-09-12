@@ -25,22 +25,32 @@ if filtered_order.empty:
 # Extract order information
 order_info = filtered_order.iloc[0]
 
-# LG brand colors
-LG_RED = "#CE0031"
-LG_GREEN = "#008A00"
-LG_GRAY = "#f2f2f2"
+# Colors
+WHITE = "rgb(255, 255, 255)"
+PRIMARY_TEXT = "rgb(27, 26, 30)"
+GOOD_STATUS = "rgb(20, 117, 41)"  # Delivered or out for delivery
+PROCESSING_STATUS = "rgb(165, 0, 52)"  # Processing or shipped
+BUTTON_COLOR = "rgb(165, 0, 52)"  # For all buttons
+BUTTON_TEXT_COLOR = WHITE  # White text on buttons
+SECONDARY_BG = "rgb(250, 250, 250)"
+THIRD_BG = "rgb(232, 232, 232)"
+ARROW_COLOR = "rgb(165, 0, 52)"  # Arrow color for opening/closing sections
 
 # Styling
 st.markdown(f"""
     <style>
+    body {{
+        background-color: {SECONDARY_BG};
+        color: {PRIMARY_TEXT};
+    }}
     .section-header {{
         font-size: 18px;
         font-weight: bold;
-        color: {LG_RED};
+        color: {PRIMARY_TEXT};
         margin-bottom: 10px;
     }}
     .info-box {{
-        background-color: {LG_GRAY};
+        background-color: {THIRD_BG};
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 20px;
@@ -56,7 +66,7 @@ st.markdown(f"""
         border: 1px solid #ddd;
     }}
     .order-items-table th {{
-        background-color: {LG_GRAY};
+        background-color: {THIRD_BG};
         font-weight: bold;
     }}
     .totals-box {{
@@ -66,14 +76,30 @@ st.markdown(f"""
         text-align: right;
     }}
     .totals-box strong {{
-        color: {LG_RED};
+        color: {PROCESSING_STATUS};
     }}
     .status-dropdown {{
         margin-top: 20px;
     }}
-    .green-text {{
-        color: {LG_GREEN};
+    .button {{
+        background-color: {BUTTON_COLOR};
+        color: {BUTTON_TEXT_COLOR};
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }}
+    .good-status {{
+        color: {GOOD_STATUS};
         font-weight: bold;
+    }}
+    .processing-status {{
+        color: {PROCESSING_STATUS};
+        font-weight: bold;
+    }}
+    .arrow {{
+        color: {ARROW_COLOR};
+        cursor: pointer;
+        font-size: 20px;
     }}
     </style>
 """, unsafe_allow_html=True)
@@ -84,7 +110,7 @@ st.markdown(f"""
 <div class="info-box">
     <div><strong>Order #:</strong> {order_info['orderID']} (The order confirmation email is not sent)</div>
     <div><strong>Order Date:</strong> {order_info['order_date']}</div>
-    <div><strong>Order Status:</strong> {order_info['status']}</div>
+    <div><strong>Order Status:</strong> <span class="{ 'good-status' if order_info['status'] in ['Delivered', 'Out for Delivery'] else 'processing-status' }">{order_info['status']}</span></div>
     <div><strong>Purchased From:</strong> {order_info['origin']}</div>
 </div>
 <div class="info-box">
@@ -118,8 +144,7 @@ st.markdown(f"""
 
 # Items Ordered
 st.markdown("<div class='section-header'>Items Ordered</div>", unsafe_allow_html=True)
-st.markdown("""
-<table class="order-items-table" width="100%">
+st.markdown("""<table class="order-items-table" width="100%">
     <thead>
         <tr>
             <th>Product</th>
@@ -134,8 +159,7 @@ st.markdown("""
             <th>Row Total</th>
         </tr>
     </thead>
-    <tbody>
-""", unsafe_allow_html=True)
+    <tbody>""", unsafe_allow_html=True)
 
 for item in order_info['items']:
     st.markdown(f"""
@@ -150,8 +174,7 @@ for item in order_info['items']:
             <td>{item['tax_percent']}%</td>
             <td>${item['discount']:.2f}</td>
             <td>${item['row_total']:.2f}</td>
-        </tr>
-    """, unsafe_allow_html=True)
+        </tr>""", unsafe_allow_html=True)
 
 st.markdown("</tbody></table>", unsafe_allow_html=True)
 
@@ -169,4 +192,3 @@ st.markdown(f"""
 # Status Dropdown
 st.markdown("<div class='section-header'>Notes for this Order</div>", unsafe_allow_html=True)
 st.selectbox('Status', ['Pending', 'Closed'])
-
