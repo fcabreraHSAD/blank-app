@@ -25,32 +25,38 @@ if filtered_order.empty:
 # Extract order information
 order_info = filtered_order.iloc[0]
 
-# Colors
-WHITE = "rgb(255, 255, 255)"
-PRIMARY_TEXT = "rgb(27, 26, 30)"
-GOOD_STATUS = "rgb(20, 117, 41)"  # Delivered or out for delivery
-PROCESSING_STATUS = "rgb(165, 0, 52)"  # Processing or shipped
-BUTTON_COLOR = "rgb(165, 0, 52)"  # For all buttons
-BUTTON_TEXT_COLOR = WHITE  # White text on buttons
-SECONDARY_BG = "rgb(250, 250, 250)"
-THIRD_BG = "rgb(232, 232, 232)"
-ARROW_COLOR = "rgb(165, 0, 52)"  # Arrow color for opening/closing sections
+# Colors to match the LG cart page theme
+WHITE = "#FFFFFF"
+LIGHT_GRAY = "#F2F2F2"
+DARK_TEXT = "#1B1A1E"
+ACCENT_COLOR = "#A50034"
+BUTTON_COLOR = ACCENT_COLOR
+BUTTON_TEXT_COLOR = WHITE
+
+# Status color logic
+STATUS_COLOR = ACCENT_COLOR if order_info['status'] in ['Pending', 'Processing', 'Shipped'] else "#148F29"  # Green for delivered, red otherwise
 
 # Styling
 st.markdown(f"""
     <style>
     body {{
-        background-color: {SECONDARY_BG};
-        color: {PRIMARY_TEXT};
+        background-color: {WHITE};
+        color: {DARK_TEXT};
     }}
     .section-header {{
-        font-size: 18px;
+        font-size: 24px;
         font-weight: bold;
-        color: {PRIMARY_TEXT};
+        color: {DARK_TEXT};
+        margin-bottom: 10px;
+    }}
+    .status-header {{
+        font-size: 30px;
+        font-weight: bold;
+        color: {STATUS_COLOR};
         margin-bottom: 10px;
     }}
     .info-box {{
-        background-color: {THIRD_BG};
+        background-color: {LIGHT_GRAY};
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 20px;
@@ -66,7 +72,7 @@ st.markdown(f"""
         border: 1px solid #ddd;
     }}
     .order-items-table th {{
-        background-color: {THIRD_BG};
+        background-color: {LIGHT_GRAY};
         font-weight: bold;
     }}
     .totals-box {{
@@ -76,10 +82,7 @@ st.markdown(f"""
         text-align: right;
     }}
     .totals-box strong {{
-        color: {PROCESSING_STATUS};
-    }}
-    .status-dropdown {{
-        margin-top: 20px;
+        color: {ACCENT_COLOR};
     }}
     .button {{
         background-color: {BUTTON_COLOR};
@@ -89,20 +92,18 @@ st.markdown(f"""
         cursor: pointer;
     }}
     .good-status {{
-        color: {GOOD_STATUS};
+        color: #148F29;
         font-weight: bold;
     }}
     .processing-status {{
-        color: {PROCESSING_STATUS};
+        color: {ACCENT_COLOR};
         font-weight: bold;
-    }}
-    .arrow {{
-        color: {ARROW_COLOR};
-        cursor: pointer;
-        font-size: 20px;
     }}
     </style>
 """, unsafe_allow_html=True)
+
+# Order Status
+st.markdown(f"<div class='status-header'>Order Status: {order_info['status']}</div>", unsafe_allow_html=True)
 
 # Order & Account Information
 st.markdown("<div class='section-header'>Order & Account Information</div>", unsafe_allow_html=True)
@@ -110,7 +111,6 @@ st.markdown(f"""
 <div class="info-box">
     <div><strong>Order #:</strong> {order_info['orderID']} (The order confirmation email is not sent)</div>
     <div><strong>Order Date:</strong> {order_info['order_date']}</div>
-    <div><strong>Order Status:</strong> <span class="{ 'good-status' if order_info['status'] in ['Delivered', 'Out for Delivery'] else 'processing-status' }">{order_info['status']}</span></div>
     <div><strong>Purchased From:</strong> {order_info['origin']}</div>
 </div>
 <div class="info-box">
@@ -188,7 +188,3 @@ st.markdown(f"""
     <div><strong>Grand Total:</strong> ${order_info['total']:.2f}</div>
 </div>
 """, unsafe_allow_html=True)
-
-# Status Dropdown
-st.markdown("<div class='section-header'>Notes for this Order</div>", unsafe_allow_html=True)
-st.selectbox('Status', ['Pending', 'Closed'])
